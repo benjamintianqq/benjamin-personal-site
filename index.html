@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benjamin Tian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #EDEDED;
+      --card: #FFFFFF;
+      --text: #111111;
+      --muted: #8A8A82;
+      --border: #D0CEC7;
+      --mm: #8F8F8F;
+      --amber: #C8A048;
+      --sage: #5E9075;
+      --dust: #B08070;
+      --navy: #034694;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: var(--sans);
+      color: var(--text);
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    /* Ghost div — creates scroll height, drives horizontal panning */
+    #ghost {
+      position: relative;
+      width: 1px;
+    }
+
+    /* Minimap — exact rauno.me dimensions */
+    #minimap {
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 191px;
+      height: 18px;
+      z-index: 200;
+    }
+    #mm-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mm-line {
+      width: 1px;
+      height: 18px;
+      background: var(--mm);
+      flex-shrink: 0;
+    }
+    #mm-tracker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 18px;
+      border: 1px solid var(--mm);
+      background: var(--bg);
+      box-shadow: 5px 0 0 var(--bg), -5px 0 0 var(--bg);
+      will-change: left;
+      transition: left 0.05s linear;
+    }
+
+    /* Frames container — fixed, pans horizontally via transform */
+    #frames {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      gap: 40px;
+      transform-origin: 0 0;
+      will-change: transform;
+      z-index: 10;
+    }
+
+    /* Card wrapper */
+    .cw {
+      position: relative;
+      width: 1200px;
+      height: 720px;
+      flex-shrink: 0;
+    }
+
+    /* Card label above */
+    .clabel {
+      position: absolute;
+      top: -28px;
+      left: 2px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* The card itself */
+    .card {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Crosshair — fixed, always at screen center, mix-blend-mode: difference ── */
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-10px, -10px);
+      mix-blend-mode: difference;
+      cursor: pointer;
+      z-index: 500;
+      pointer-events: auto;
+      transition: opacity 0.2s ease;
+    }
+    #crosshair line {
+      stroke: white;
+      stroke-width: 1.5;
+    }
+
+    /* ── Debug / outline mode ── */
+    /* Card shell */
+    body[data-debug="true"] .card {
+      background: transparent !important;
+      border: 1px solid rgba(0,0,0,0.3) !important;
+    }
+    /* All backgrounds transparent */
+    body[data-debug="true"] .card * {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+    /* Text → outlined */
+    body[data-debug="true"] .card p,
+    body[data-debug="true"] .card span,
+    body[data-debug="true"] .card div,
+    body[data-debug="true"] .card h1,
+    body[data-debug="true"] .card h2,
+    body[data-debug="true"] .card a,
+    body[data-debug="true"] .card button,
+    body[data-debug="true"] .card label {
+      color: transparent !important;
+      -webkit-text-stroke: 0.8px rgba(0,0,0,0.55) !important;
+    }
+    /* Decorative shapes → outline only */
+    body[data-debug="true"] .intro-circle,
+    body[data-debug="true"] .connect-deco,
+    body[data-debug="true"] .connect-deco2,
+    body[data-debug="true"] .proj-dot,
+    body[data-debug="true"] .univ-cell,
+    body[data-debug="true"] .proj-cell {
+      border: 1px solid rgba(0,0,0,0.25) !important;
+    }
+    /* Borders reset to dark on all children */
+    body[data-debug="true"] .card [style] {
+      border-color: rgba(0,0,0,0.25) !important;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARD 1 — INTRO
+    ═══════════════════════════════════════════ */
+    #card-intro {
+      background: #EEECEA;
+    }
+    .intro-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 96px;
+    }
+    .intro-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .intro-name {
+      font-family: var(--serif);
+      font-size: 128px;
+      font-weight: 300;
+      line-height: 0.88;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 40px;
+    }
+    .intro-name em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .intro-role {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 36px;
+    }
+    .intro-bio {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #4A4A45;
+      max-width: 480px;
+    }
+    .intro-more {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #5A5A55;
+      max-width: 460px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .intro-more.open {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 20px;
+    }
+    /* Amber circle decoration */
+    .intro-circle {
+      position: absolute;
+      right: 96px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: var(--amber);
+      opacity: 0.12;
+    }
+    .intro-tagline {
+      position: absolute;
+      bottom: 56px;
+      right: 96px;
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARD 2 — WORK
+    ═══════════════════════════════════════════ */
+    #card-work {
+      background: #FFFFFF;
+    }
+    .work-inner {
+      position: absolute;
+      inset: 0;
+      padding: 72px 96px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+    .work-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .work-item {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .work-item:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+    .work-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .work-company {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+    .work-item:hover .work-company { color: var(--amber); }
+    .work-meta {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .work-role {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .work-year {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .work-chevron {
+      font-size: 12px;
+      color: var(--muted);
+      transition: transform 0.3s ease;
+    }
+    .work-item.open .work-chevron { transform: rotate(90deg); }
+    .work-detail {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #5A5A55;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+      padding-right: 120px;
+    }
+    .work-item.open .work-detail {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 12px;
+    }
+    .work-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .work-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARD 3 — PROJECTS
+    ═══════════════════════════════════════════ */
+    #card-projects {
+      background: #0F0F0D;
+    }
+    .projects-inner {
+      position: absolute;
+      inset: 0;
+      padding: 72px 96px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title-light {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+    .proj-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+    .proj-cell {
+      background: #0F0F0D;
+      padding: 44px 48px 40px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: background 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .proj-cell:hover { background: #181816; }
+    .proj-cover {
+      flex-shrink: 0;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      opacity: 0.85;
+      transition: opacity 0.25s ease;
+    }
+    .proj-cell:hover .proj-cover { opacity: 1; }
+    .proj-cover svg { width: 100%; height: 100%; }
+    .proj-cell-arrow {
+      position: absolute;
+      top: 36px;
+      right: 44px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.2);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .proj-cell:hover .proj-cell-arrow {
+      color: rgba(255,255,255,0.55);
+      transform: translate(2px, -2px);
+    }
+    .proj-body { flex: 1; display: flex; flex-direction: column; }
+    .proj-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .proj-name {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 400;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .proj-desc {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+    .proj-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 20px;
+    }
+    .proj-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+    .proj-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .proj-stack-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 3px 8px;
+    }
+    .proj-biz {
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.28);
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARD 4 — UNIVERSE
+    ═══════════════════════════════════════════ */
+    #card-universe {
+      background: #EEECEA;
+    }
+    .universe-inner {
+      position: absolute;
+      inset: 0;
+      padding: 72px 96px;
+      display: flex;
+      flex-direction: column;
+    }
+    .univ-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 24px;
+    }
+    .univ-cell {
+      border: 1px solid var(--border);
+      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.5);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+    .univ-cell:hover {
+      background: rgba(255,255,255,0.9);
+      border-color: #B8B4AD;
+    }
+    .univ-icon {
+      font-size: 22px;
+      margin-bottom: 16px;
+      opacity: 0.7;
+    }
+    .univ-category {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .univ-title {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .univ-items {
+      font-size: 12px;
+      font-weight: 300;
+      color: #6A6A65;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════
+       CARD 5 — CONNECT  (flip card layout)
+    ═══════════════════════════════════════════ */
+    #card-connect { background: #FFFFFF; }
+
+    /* Flip container */
+    .cn-flip {
+      position: absolute;
+      cursor: pointer;
+    }
+    .cn-flip-inner {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cn-flip.flipped .cn-flip-inner {
+      transform: rotateX(180deg);
+    }
+    /* Both faces */
+    .cn-face {
+      display: block;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      line-height: 1;
+    }
+    /* Back face — rotated 180° so it's invisible until flipped */
+    .cn-face-back {
+      transform: rotateX(180deg);
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-decoration: none;
+    }
+    /* Right-anchored corners: back aligns to right edge */
+    .cn-tr .cn-face-back,
+    .cn-br .cn-face-back { left: auto; right: 0; }
+
+    /* Typography */
+    .cn-big {
+      font-family: var(--sans);
+      font-size: 88px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+    .cn-reveal {
+      font-family: var(--sans);
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    /* Corner positions */
+    .cn-tl { top: 60px; left: 72px; }
+    .cn-tr { top: 60px; right: 72px; text-align: right; }
+    .cn-bl { bottom: 60px; left: 72px; }
+    .cn-br { bottom: 60px; right: 72px; text-align: right; }
+
+    /* Center label — same font as corners, no flip */
+    .cn-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--sans);
+      font-size: 88px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       VOYAGE MODAL
+    ═══════════════════════════════════════════ */
+    #voyage-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #voyage-modal.open { display: flex; }
+    .modal-panel {
+      margin: auto;
+      width: 900px;
+      max-width: 95vw;
+      height: 580px;
+      max-height: 90vh;
+      background: #FFFFFF;
+      display: flex;
+      overflow: hidden;
+      border-radius: 2px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+    }
+    .modal-info {
+      width: 340px;
+      flex-shrink: 0;
+      background: #F8F6F2;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1;
+      padding: 4px;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-project-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .modal-project-name {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .modal-project-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #5A5A55;
+      flex: 1;
+    }
+    .modal-meta {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .modal-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+    .modal-meta-key {
+      font-family: var(--mono);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .modal-meta-val {
+      color: var(--text);
+      font-weight: 300;
+    }
+    .modal-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #FFFFFF;
+      position: relative;
+    }
+    .chat-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); }
+    .msg {
+      max-width: 80%;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    .msg-ai {
+      align-self: flex-start;
+      color: var(--text);
+    }
+    .msg-user {
+      align-self: flex-end;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .chat-input-row {
+      padding: 16px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1;
+      background: #F8F6F2;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      border-radius: 1px;
+      line-height: 1.5;
+    }
+    .chat-input:focus { border-color: #AAAAAA; }
+    .chat-send {
+      background: var(--text);
+      color: #FFF;
+      border: none;
+      padding: 10px 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-radius: 1px;
+    }
+    .chat-send:hover { background: #333; }
+
+    /* scroll hint arrow at bottom of card */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .scroll-hint span {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .scroll-hint svg {
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ghost div — JS sets its height to drive scroll -->
+<div id="ghost"></div>
+
+<!-- Minimap — fixed, top center, exact rauno.me dimensions -->
+<div id="minimap">
+  <div id="mm-inner">
+    <!-- 20 tick lines -->
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div><div class="mm-line"></div>
+    <div class="mm-line"></div><div class="mm-line"></div>
+    <!-- Tracker -->
+    <div id="mm-tracker"></div>
+  </div>
+</div>
+
+<!-- Fixed frames container — 5 cards, horizontally arranged -->
+<div id="frames">
+
+  <!-- CARD 1: INTRO -->
+  <div class="cw" id="cw-0">
+    <div class="clabel">00 — 你好</div>
+    <div class="card" id="card-intro">
+      <div class="intro-circle"></div>
+      <div class="intro-inner">
+        <div class="intro-eyebrow">个人主页 · 2025</div>
+        <div class="intro-name">Benjamin<br><em>Tian</em></div>
+        <div class="intro-role">
+          互联网战略（社区 / 商业化 / 交易）<br>
+          极致要求的内容品味 &nbsp;·&nbsp; AI 探索者
+        </div>
+        <p class="intro-bio">在小红书做了四年策略，经历了社区从内容生态到大商业的完整演变，也参与了国际化从 0 到 1 的搭建。现在把对商业的理解和对 AI 的兴趣拼在一起，做一些觉得有意思的事情。</p>
+      </div>
+      <div class="intro-tagline">田嘉平</div>
+    </div>
+  </div>
+
+  <!-- CARD 2: WORK -->
+  <div class="cw" id="cw-1">
+    <div class="clabel">01 — 经历</div>
+    <div class="card" id="card-work">
+      <div class="work-inner">
+        <div class="card-title">职业经历</div>
+        <div class="work-list">
+          <div class="work-item open" onclick="toggleWork(this)">
+            <div class="work-header">
+              <div class="work-company">小红书 · 下半场</div>
+              <div class="work-meta">
+                <span class="work-role">商业化/社区战略部 · 战略分析经理</span>
+                <span class="work-year">2023–至今</span>
+                <span class="work-chevron">›</span>
+              </div>
+            </div>
+            <div class="work-detail">
+              负责消费品（服饰）、汽车、生活服务、搜索广告等多条业务线的经分和策略工作。横跨所有行业 verticals 让我对商业化整体形成了系统性认知，同时主导了非闭环效果产品（线索/下载广告）的0-1战略方向。在日常工作中大量引入 AI-native 工作流，重构了策略研究和分析的方式。
+              <div class="work-tags">
+                <span class="work-tag">广告战略</span>
+                <span class="work-tag">电商经分</span>
+                <span class="work-tag">行业和产品洞察</span>
+                <span class="work-tag">AI-Native工作流</span>
+              </div>
+            </div>
+          </div>
+          <div class="work-item" onclick="toggleWork(this)">
+            <div class="work-header">
+              <div class="work-company">小红书 · 上半场</div>
+              <div class="work-meta">
+                <span class="work-role">社区战略 · 国际化 BP</span>
+                <span class="work-year">2022–2023</span>
+                <span class="work-chevron">›</span>
+              </div>
+            </div>
+            <div class="work-detail">
+              以社区策略 BP 身份参与小红书内容生态和国际化战略。主导出海项目从 0 到 1 的策略搭建，建立社区流量策略决策体系和流程，支持一级部门年度战略解码会。深度理解了内容社区的底层运转逻辑，以及国际化从无到有的完整路径。
+              <div class="work-tags">
+                <span class="work-tag">内容社区</span>
+                <span class="work-tag">国际化</span>
+                <span class="work-tag">0-1搭建</span>
+              </div>
+            </div>
+          </div>
+          <div class="work-item" onclick="toggleWork(this)">
+            <div class="work-header">
+              <div class="work-company">安永帕特农</div>
+              <div class="work-meta">
+                <span class="work-role">战略与交易咨询 · 高级咨询顾问</span>
+                <span class="work-year">2021–2022</span>
+                <span class="work-chevron">›</span>
+              </div>
+            </div>
+            <div class="work-detail">
+              专注 TMT 行业战略咨询和尽职调查。参与大数据数仓商业尽调、互联网旅游公司战略升级可行性分析等项目，培养了严谨的结构化分析方法论。
+              <div class="work-tags">
+                <span class="work-tag">TMT咨询</span>
+                <span class="work-tag">尽职调查</span>
+              </div>
+            </div>
+          </div>
+          <div class="work-item" onclick="toggleWork(this)">
+            <div class="work-header">
+              <div class="work-company">毕马威</div>
+              <div class="work-meta">
+                <span class="work-role">管理咨询 · 咨询顾问</span>
+                <span class="work-year">2019–2021</span>
+                <span class="work-chevron">›</span>
+              </div>
+            </div>
+            <div class="work-detail">
+              参与数字化战略规划、尽职调查、企业数据安全保护咨询项目，打下了咨询方法论基础。
+              <div class="work-tags">
+                <span class="work-tag">数字化战略</span>
+                <span class="work-tag">管理咨询</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--muted);">华东理工大学 &nbsp;·&nbsp; 计算机科学与技术</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">2015–2019 &nbsp;·&nbsp; GPA 3.3/4.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: PROJECTS -->
+  <div class="cw" id="cw-2">
+    <div class="clabel">02 — 项目</div>
+    <div class="card" id="card-projects">
+      <div class="projects-inner">
+        <div class="card-title-light">AI 项目</div>
+        <div class="proj-grid">
+
+          <!-- Project 1: Travel AI -->
+          <div class="proj-cell" onclick="openProject('https://floras-italian-dream.lovable.app')">
+            <div class="proj-cover">
+              <svg viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Concentric rings — compass / destination -->
+                <circle cx="130" cy="80" r="72" stroke="rgba(200,160,72,0.10)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="52" stroke="rgba(200,160,72,0.16)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="34" stroke="rgba(200,160,72,0.24)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="16" stroke="rgba(200,160,72,0.36)" stroke-width="1"/>
+                <!-- Cross hairs -->
+                <line x1="130" y1="8" x2="130" y2="152" stroke="rgba(200,160,72,0.08)" stroke-width="1"/>
+                <line x1="58" y1="80" x2="202" y2="80" stroke="rgba(200,160,72,0.08)" stroke-width="1"/>
+                <!-- Route arc -->
+                <path d="M 70 100 Q 110 30 190 55" stroke="rgba(200,160,72,0.45)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <!-- Destination pin -->
+                <circle cx="190" cy="55" r="4" fill="rgba(200,160,72,0.7)"/>
+                <circle cx="70" cy="100" r="3" fill="rgba(200,160,72,0.4)"/>
+                <!-- Pin dot glow -->
+                <circle cx="190" cy="55" r="8" fill="rgba(200,160,72,0.12)"/>
+              </svg>
+            </div>
+            <div class="proj-body">
+              <div class="proj-num">01</div>
+              <div class="proj-name">AI 旅行助手</div>
+              <div class="proj-desc">把模糊的旅行想法变成可落地的行程计划，像一个真正了解你的旅伴。</div>
+              <div class="proj-biz">商业模式：To C · 按行程付费</div>
+              <div class="proj-stack">
+                <span class="proj-stack-tag">Lovable</span>
+                <span class="proj-stack-tag">GPT-4o</span>
+                <span class="proj-stack-tag">Maps API</span>
+              </div>
+            </div>
+            <div class="proj-status" style="margin-top:20px;"><span class="proj-dot"></span> Live Beta</div>
+            <div class="proj-cell-arrow">↗</div>
+          </div>
+
+          <!-- Project 2: StockLens -->
+          <div class="proj-cell" onclick="openProject('http://10.40.81.35:8765/stock-analyzer.html')">
+            <div class="proj-cover">
+              <svg viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Grid lines -->
+                <line x1="30" y1="130" x2="240" y2="130" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <line x1="30" y1="100" x2="240" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="72" x2="240" y2="72" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="44" x2="240" y2="44" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="16" x2="30" y2="130" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <!-- Candlesticks (simplified as vertical rects) -->
+                <rect x="48" y="95" width="6" height="25" fill="rgba(94,144,117,0.35)"/>
+                <line x1="51" y1="88" x2="51" y2="124" stroke="rgba(94,144,117,0.4)" stroke-width="1"/>
+                <rect x="72" y="88" width="6" height="20" fill="rgba(94,144,117,0.4)"/>
+                <line x1="75" y1="82" x2="75" y2="112" stroke="rgba(94,144,117,0.4)" stroke-width="1"/>
+                <rect x="96" y="98" width="6" height="18" fill="rgba(185,90,80,0.35)"/>
+                <line x1="99" y1="93" x2="99" y2="120" stroke="rgba(185,90,80,0.4)" stroke-width="1"/>
+                <rect x="120" y="72" width="6" height="22" fill="rgba(94,144,117,0.45)"/>
+                <line x1="123" y1="65" x2="123" y2="98" stroke="rgba(94,144,117,0.45)" stroke-width="1"/>
+                <rect x="144" y="62" width="6" height="20" fill="rgba(94,144,117,0.5)"/>
+                <line x1="147" y1="55" x2="147" y2="86" stroke="rgba(94,144,117,0.5)" stroke-width="1"/>
+                <rect x="168" y="80" width="6" height="16" fill="rgba(185,90,80,0.35)"/>
+                <line x1="171" y1="75" x2="171" y2="100" stroke="rgba(185,90,80,0.4)" stroke-width="1"/>
+                <rect x="192" y="44" width="6" height="28" fill="rgba(94,144,117,0.6)"/>
+                <line x1="195" y1="36" x2="195" y2="76" stroke="rgba(94,144,117,0.6)" stroke-width="1"/>
+                <!-- Trend line -->
+                <polyline points="51,108 75,100 99,108 123,84 147,74 171,90 195,58" stroke="rgba(94,144,117,0.55)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Signal -->
+                <circle cx="195" cy="58" r="5" fill="rgba(94,144,117,0.8)"/>
+                <circle cx="195" cy="58" r="10" fill="rgba(94,144,117,0.12)"/>
+                <!-- BUY label -->
+                <text x="204" y="56" fill="rgba(94,144,117,0.7)" font-size="9" font-family="monospace">BUY</text>
+              </svg>
+            </div>
+            <div class="proj-body">
+              <div class="proj-num">02</div>
+              <div class="proj-name">StockLens</div>
+              <div class="proj-desc">基于量化因子模型，给出个股买入/卖出信号，降低散户决策噪音。</div>
+              <div class="proj-biz">商业模式：To C · 策略订阅解锁</div>
+              <div class="proj-stack">
+                <span class="proj-stack-tag">Python</span>
+                <span class="proj-stack-tag">量化因子模型</span>
+                <span class="proj-stack-tag">本地服务</span>
+              </div>
+            </div>
+            <div class="proj-status" style="margin-top:20px;"><span class="proj-dot" style="background:var(--amber)"></span> 内测中</div>
+            <div class="proj-cell-arrow">↗</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: UNIVERSE -->
+  <div class="cw" id="cw-3">
+    <div class="clabel">03 — 关于我</div>
+    <div class="card" id="card-universe">
+      <div class="universe-inner">
+        <div class="card-title">工作之外</div>
+        <div class="univ-grid">
+          <div class="univ-cell">
+            <div class="univ-icon">🎬</div>
+            <div class="univ-category">电影</div>
+            <div class="univ-title">法国新浪潮 · 台湾新电影</div>
+            <div class="univ-items">最近沉迷挪威电影。《世界上最糟糕的人》让我觉得电影还可以这样拍。<br>作者性是我理解一切的起点。</div>
+          </div>
+          <div class="univ-cell">
+            <div class="univ-icon">📚</div>
+            <div class="univ-category">阅读</div>
+            <div class="univ-title">加缪 · 陀思妥耶夫斯基</div>
+            <div class="univ-items">加缪教我接受荒诞，陀思妥耶夫斯基教我直视人性。两个人放在一起读，挺折磨的。</div>
+          </div>
+          <div class="univ-cell">
+            <div class="univ-icon">🏛️</div>
+            <div class="univ-category">文艺复兴</div>
+            <div class="univ-title">佛罗伦萨 · 乌菲兹美术馆</div>
+            <div class="univ-items">反复去，每次都觉得没看够，每次回来都觉得多了点什么。</div>
+          </div>
+          <div class="univ-cell">
+            <div class="univ-icon">⚽</div>
+            <div class="univ-category">足球</div>
+            <div class="univ-title">切尔西 FC</div>
+            <div class="univ-items">从 2009 年开始，看了 17 年了，全程陪跑，不解释。<br>KTBFFH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5: CONNECT -->
+  <div class="cw" id="cw-4">
+    <div class="clabel">04 — Connect</div>
+    <div class="card" id="card-connect">
+
+      <!-- Top-left: Email → address -->
+      <div class="cn-flip cn-tl">
+        <div class="cn-flip-inner">
+          <span class="cn-face cn-big">Email</span>
+          <span class="cn-face cn-face-back cn-reveal">benjamintian1996<br>@gmail.com</span>
+        </div>
+      </div>
+
+      <!-- Top-right: Year → tagline -->
+      <div class="cn-flip cn-tr">
+        <div class="cn-flip-inner">
+          <span class="cn-face cn-big">2025</span>
+          <span class="cn-face cn-face-back cn-reveal">Personal<br>Portfolio</span>
+        </div>
+      </div>
+
+      <!-- Center: static greeting -->
+      <div class="cn-center">Say hi.</div>
+
+      <!-- Bottom-left: Shanghai → location detail -->
+      <div class="cn-flip cn-bl">
+        <div class="cn-flip-inner">
+          <span class="cn-face cn-big">Shanghai</span>
+          <span class="cn-face cn-face-back cn-reveal">Based in<br>China</span>
+        </div>
+      </div>
+
+      <!-- Bottom-right: Phone → number -->
+      <div class="cn-flip cn-br">
+        <div class="cn-flip-inner">
+          <span class="cn-face cn-big">Phone</span>
+          <span class="cn-face cn-face-back cn-reveal">+86 180<br>1920 5808</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /frames -->
+
+<!-- Crosshair — fixed, screen center, mix-blend-mode: difference (matches rauno.me exactly) -->
+<svg id="crosshair" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <line x1="14.75" y1="0" x2="14.75" y2="30"/>
+  <line x1="0" y1="14.25" x2="30" y2="14.25"/>
+</svg>
+
+
+<script>
+  /* ═══════════════════════════════════════════
+     CONSTANTS
+  ═══════════════════════════════════════════ */
+  const CARD_W = 1200;
+  const CARD_H = 720;
+  const CARD_GAP = 40;
+  const N = 5;
+  const REF_W = 1300;
+  const REF_H = 820;
+  const MM_W = 191;
+  const MM_TRACK = 30;
+
+  const ghost = document.getElementById('ghost');
+  const frames = document.getElementById('frames');
+  const mmTracker = document.getElementById('mm-tracker');
+  const labels = document.querySelectorAll('.clabel');
+  const crosshair = document.getElementById('crosshair');
+
+  /* ═══════════════════════════════════════════
+     SCALE
+     stdScale  — standard fitted scale (cards 2-5, same as rauno.me)
+                 min(VW/1300, VH/820, 1)
+     maxScale  — card-fill scale (card 1 at rest)
+                 min(VW/CARD_W, VH/CARD_H, 1)
+     getScale(sy) — lerps max→std over the first card's scroll distance,
+                    stays at std for all subsequent cards.
+     This creates the "card 1 is big, scrolling shrinks everything" effect.
+  ═══════════════════════════════════════════ */
+  function getStdScale() {
+    return Math.min(window.innerWidth / REF_W, window.innerHeight / REF_H, 1);
+  }
+  function getMaxScale() {
+    return Math.min(window.innerWidth / CARD_W, window.innerHeight / CARD_H, 1);
+  }
+  function getScale(sy) {
+    const std = getStdScale();
+    const mx  = getMaxScale();
+    if (mx <= std) return std; // no difference at very large viewports
+    const step = (CARD_W + CARD_GAP) * std; // distance to card 2
+    const p = Math.min(sy / step, 1);       // 0 at card 1, 1 at card 2
+    // ease-out cubic: fast shrink at start, settles by card 2
+    const ease = 1 - Math.pow(1 - p, 3);
+    return mx - (mx - std) * ease;
+  }
+
+  /* ═══════════════════════════════════════════
+     GHOST HEIGHT — based on stdScale so cards 2-5
+     all have consistent step sizes
+  ═══════════════════════════════════════════ */
+  function setGhost() {
+    const std = getStdScale();
+    const h = (N - 1) * (CARD_W + CARD_GAP) * std + window.innerHeight;
+    ghost.style.height = h + 'px';
+  }
+
+  /* ═══════════════════════════════════════════
+     LAYOUT
+     Tx = VW/2 − CARD_W/2·s − scrollY
+     centers card 0 at scrollY=0 with scale=maxScale,
+     centers card i at scrollY = i·(CARD_W+GAP)·stdScale with scale=stdScale.
+     Math proof: both work because the scale transition completes by card 2.
+  ═══════════════════════════════════════════ */
+  function layout() {
+    const sy = window.scrollY;
+    const s  = getScale(sy);
+    const std = getStdScale();
+    const VW = window.innerWidth;
+    const VH = window.innerHeight;
+    const max = (N - 1) * (CARD_W + CARD_GAP) * std;
+
+    const Tx = VW / 2 - (CARD_W / 2) * s - sy;
+    const Ty = VH / 2 - (CARD_H / 2) * s;
+
+    frames.style.transform = `translate(${Tx}px,${Ty}px) scale(${s})`;
+
+    /* Minimap tracker */
+    const prog = max > 0 ? Math.min(sy / max, 1) : 0;
+    mmTracker.style.left = (prog * (MM_W - MM_TRACK)) + 'px';
+
+    /* Card label — show active card label */
+    const idx = Math.round(prog * (N - 1));
+    labels.forEach((el, i) => {
+      el.style.opacity = i === idx ? '1' : '0';
+    });
+  }
+
+  /* ═══════════════════════════════════════════
+     RAF THROTTLE
+  ═══════════════════════════════════════════ */
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        layout();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    setGhost();
+    layout();
+  });
+
+  /* Init */
+  setGhost();
+  layout();
+
+  /* ═══════════════════════════════════════════
+     CROSSHAIR — toggles debug/outline mode
+     Matches rauno.me: data-debug on body toggles
+     all card backgrounds/text to wireframe view
+  ═══════════════════════════════════════════ */
+  crosshair.addEventListener('click', () => {
+    const isDebug = document.body.dataset.debug === 'true';
+    document.body.dataset.debug = isDebug ? 'false' : 'true';
+  });
+
+  /* ═══════════════════════════════════════════
+     KEYBOARD NAVIGATION — smooth snap
+  ═══════════════════════════════════════════ */
+  let currentCard = 0;
+  let isSnapping = false;
+
+  function snapToCard(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    const s = getStdScale();
+    const target = i * (CARD_W + CARD_GAP) * s;
+    smoothScroll(target);
+    currentCard = i;
+  }
+
+  function smoothScroll(target) {
+    const start = window.scrollY;
+    const dist = target - start;
+    const dur = 640;
+    let t0 = null;
+    isSnapping = true;
+
+    function step(ts) {
+      if (!t0) t0 = ts;
+      const elapsed = ts - t0;
+      const p = Math.min(elapsed / dur, 1);
+      /* ease-in-out cubic */
+      const ease = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      window.scrollTo(0, start + dist * ease);
+      if (p < 1) {
+        requestAnimationFrame(step);
+      } else {
+        isSnapping = false;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const s = getStdScale();
+      const step = (CARD_W + CARD_GAP) * s;
+      const idx = Math.round(window.scrollY / step);
+      snapToCard(idx + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const s = getStdScale();
+      const step = (CARD_W + CARD_GAP) * s;
+      const idx = Math.round(window.scrollY / step);
+      snapToCard(idx - 1);
+    }
+  });
+
+  /* ═══════════════════════════════════════════
+     CONNECT — flip cards
+  ═══════════════════════════════════════════ */
+  document.querySelectorAll('.cn-flip').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('flipped'));
+  });
+
+  /* ═══════════════════════════════════════════
+     PROJECTS — open external link
+  ═══════════════════════════════════════════ */
+  function openProject(url) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  /* ═══════════════════════════════════════════
+     WORK — accordion
+  ═══════════════════════════════════════════ */
+  function toggleWork(item) {
+    const isOpen = item.classList.contains('open');
+    /* Close all */
+    document.querySelectorAll('.work-item').forEach(el => el.classList.remove('open'));
+    /* Open clicked if it was closed */
+    if (!isOpen) item.classList.add('open');
+  }
+
+</script>
+</body>
+</html>
