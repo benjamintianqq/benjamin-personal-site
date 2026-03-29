@@ -224,6 +224,7 @@
       color: var(--muted);
       line-height: 1.9;
       margin-bottom: 36px;
+      white-space: nowrap;
     }
     .intro-bio {
       font-family: var(--sans);
@@ -357,9 +358,37 @@
       padding-right: 120px;
     }
     .work-item.open .work-detail {
-      max-height: 200px;
+      max-height: 500px;
       opacity: 1;
       margin-top: 12px;
+    }
+    /* Sub-items inside expanded work-detail */
+    .work-sub {
+      padding: 14px 0;
+      border-top: 1px solid rgba(208,206,199,0.5);
+    }
+    .work-sub:first-child {
+      border-top: none;
+      padding-top: 2px;
+    }
+    .work-sub-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .work-sub-period {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .work-sub-year {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin-left: 16px;
     }
     .work-tags {
       display: flex;
@@ -871,10 +900,7 @@
       <div class="intro-inner">
         <div class="intro-eyebrow">个人主页 · 2025</div>
         <div class="intro-name">Benjamin<br><em>Tian</em></div>
-        <div class="intro-role">
-          互联网战略（社区 / 商业化 / 交易）<br>
-          极致要求的内容品味 &nbsp;·&nbsp; AI 探索者
-        </div>
+        <div class="intro-role">互联网战略 &nbsp;·&nbsp; INTJ &nbsp;·&nbsp; 有taste的理想主义</div>
         <p class="intro-bio">在小红书做了四年策略，经历了社区从内容生态到大商业的完整演变，也参与了国际化从 0 到 1 的搭建。现在把对商业的理解和对 AI 的兴趣拼在一起，做一些觉得有意思的事情。</p>
       </div>
       <div class="intro-tagline">田嘉平</div>
@@ -888,81 +914,82 @@
       <div class="work-inner">
         <div class="card-title">职业经历</div>
         <div class="work-list">
+
+          <!-- 小红书 -->
           <div class="work-item open" onclick="toggleWork(this)">
             <div class="work-header">
-              <div class="work-company">小红书 · 下半场</div>
+              <div class="work-company">小红书</div>
               <div class="work-meta">
-                <span class="work-role">商业化/社区战略部 · 战略分析经理</span>
-                <span class="work-year">2023–至今</span>
+                <span class="work-role">战略分析 · 社区战略</span>
+                <span class="work-year">2022–至今</span>
                 <span class="work-chevron">›</span>
               </div>
             </div>
             <div class="work-detail">
-              负责消费品（服饰）、汽车、生活服务、搜索广告等多条业务线的经分和策略工作。横跨所有行业 verticals 让我对商业化整体形成了系统性认知，同时主导了非闭环效果产品（线索/下载广告）的0-1战略方向。在日常工作中大量引入 AI-native 工作流，重构了策略研究和分析的方式。
-              <div class="work-tags">
-                <span class="work-tag">广告战略</span>
-                <span class="work-tag">电商经分</span>
-                <span class="work-tag">行业和产品洞察</span>
-                <span class="work-tag">AI-Native工作流</span>
+              <div class="work-sub">
+                <div class="work-sub-header">
+                  <span class="work-sub-period">下半场 · 商业化/社区战略部 · 战略分析经理</span>
+                  <span class="work-sub-year">2023–至今</span>
+                </div>
+                <p>负责消费品（服饰）、汽车、生活服务、搜索广告等多条业务线的经分和策略工作。横跨所有行业 verticals 让我对商业化整体形成了系统性认知，同时主导了非闭环效果产品（线索/下载广告）的0-1战略方向。在日常工作中大量引入 AI-native 工作流，重构了策略研究和分析的方式。</p>
+                <div class="work-tags">
+                  <span class="work-tag">广告战略</span>
+                  <span class="work-tag">电商经分</span>
+                  <span class="work-tag">行业和产品洞察</span>
+                  <span class="work-tag">AI-Native工作流</span>
+                </div>
+              </div>
+              <div class="work-sub">
+                <div class="work-sub-header">
+                  <span class="work-sub-period">上半场 · 社区战略 · 国际化 BP</span>
+                  <span class="work-sub-year">2022–2023</span>
+                </div>
+                <p>以社区策略 BP 身份参与小红书内容生态和国际化战略。主导出海项目从 0 到 1 的策略搭建，建立社区流量策略决策体系和流程，支持一级部门年度战略解码会。深度理解了内容社区的底层运转逻辑，以及国际化从无到有的完整路径。</p>
+                <div class="work-tags">
+                  <span class="work-tag">内容社区</span>
+                  <span class="work-tag">国际化</span>
+                  <span class="work-tag">0-1搭建</span>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- 咨询顾问 -->
           <div class="work-item" onclick="toggleWork(this)">
             <div class="work-header">
-              <div class="work-company">小红书 · 上半场</div>
+              <div class="work-company">咨询顾问</div>
               <div class="work-meta">
-                <span class="work-role">社区战略 · 国际化 BP</span>
-                <span class="work-year">2022–2023</span>
+                <span class="work-role">战略与管理咨询</span>
+                <span class="work-year">2019–2022</span>
                 <span class="work-chevron">›</span>
               </div>
             </div>
             <div class="work-detail">
-              以社区策略 BP 身份参与小红书内容生态和国际化战略。主导出海项目从 0 到 1 的策略搭建，建立社区流量策略决策体系和流程，支持一级部门年度战略解码会。深度理解了内容社区的底层运转逻辑，以及国际化从无到有的完整路径。
-              <div class="work-tags">
-                <span class="work-tag">内容社区</span>
-                <span class="work-tag">国际化</span>
-                <span class="work-tag">0-1搭建</span>
+              <div class="work-sub">
+                <div class="work-sub-header">
+                  <span class="work-sub-period">安永帕特农 · 战略与交易咨询 · 高级顾问</span>
+                  <span class="work-sub-year">2021–2022</span>
+                </div>
+                <p>专注 TMT 行业战略咨询和尽职调查。参与大数据数仓商业尽调、互联网旅游公司战略升级可行性分析等项目，培养了严谨的结构化分析方法论。</p>
+                <div class="work-tags">
+                  <span class="work-tag">TMT咨询</span>
+                  <span class="work-tag">尽职调查</span>
+                </div>
+              </div>
+              <div class="work-sub">
+                <div class="work-sub-header">
+                  <span class="work-sub-period">毕马威 · 管理咨询 · 顾问</span>
+                  <span class="work-sub-year">2019–2021</span>
+                </div>
+                <p>参与数字化战略规划、尽职调查、企业数据安全保护咨询项目，打下了咨询方法论基础。</p>
+                <div class="work-tags">
+                  <span class="work-tag">数字化战略</span>
+                  <span class="work-tag">管理咨询</span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="work-item" onclick="toggleWork(this)">
-            <div class="work-header">
-              <div class="work-company">安永帕特农</div>
-              <div class="work-meta">
-                <span class="work-role">战略与交易咨询 · 高级咨询顾问</span>
-                <span class="work-year">2021–2022</span>
-                <span class="work-chevron">›</span>
-              </div>
-            </div>
-            <div class="work-detail">
-              专注 TMT 行业战略咨询和尽职调查。参与大数据数仓商业尽调、互联网旅游公司战略升级可行性分析等项目，培养了严谨的结构化分析方法论。
-              <div class="work-tags">
-                <span class="work-tag">TMT咨询</span>
-                <span class="work-tag">尽职调查</span>
-              </div>
-            </div>
-          </div>
-          <div class="work-item" onclick="toggleWork(this)">
-            <div class="work-header">
-              <div class="work-company">毕马威</div>
-              <div class="work-meta">
-                <span class="work-role">管理咨询 · 咨询顾问</span>
-                <span class="work-year">2019–2021</span>
-                <span class="work-chevron">›</span>
-              </div>
-            </div>
-            <div class="work-detail">
-              参与数字化战略规划、尽职调查、企业数据安全保护咨询项目，打下了咨询方法论基础。
-              <div class="work-tags">
-                <span class="work-tag">数字化战略</span>
-                <span class="work-tag">管理咨询</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-family:var(--serif);font-size:14px;color:var(--muted);">华东理工大学 &nbsp;·&nbsp; 计算机科学与技术</span>
-          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">2015–2019 &nbsp;·&nbsp; GPA 3.3/4.0</span>
+
         </div>
       </div>
     </div>
@@ -1190,8 +1217,9 @@
     return Math.min(window.innerWidth / REF_W, (window.innerHeight - UI_CHROME) / CARD_H, 1);
   }
   function getMaxScale() {
-    const UI_CHROME = 180;
-    return Math.min(window.innerWidth / CARD_W, (window.innerHeight - UI_CHROME) / CARD_H, 1);
+    // Allow card 1 to overflow slightly for a dramatic zoom-out effect.
+    // Cap at 1.15 so it doesn't become too large on very big screens.
+    return Math.min(window.innerWidth / CARD_W, window.innerHeight / CARD_H, 1.15);
   }
   function getScale(sy) {
     const std = getStdScale();
