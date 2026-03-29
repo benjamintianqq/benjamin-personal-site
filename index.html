@@ -17,7 +17,7 @@
       --muted: #8A8A82;
       --border: #D0CEC7;
       --mm: #8F8F8F;
-      --amber: #C8A048;
+      --amber: #C8A048
       --sage: #5E9075;
       --dust: #B08070;
       --navy: #034694;
@@ -1184,10 +1184,14 @@
      This creates the "card 1 is big, scrolling shrinks everything" effect.
   ═══════════════════════════════════════════ */
   function getStdScale() {
-    return Math.min(window.innerWidth / REF_W, window.innerHeight / REF_H, 1);
+    // Reserve 180px vertically (90px top for minimap + 90px bottom margin)
+    // so cards never overlap the minimap bar on small laptop screens.
+    const UI_CHROME = 180;
+    return Math.min(window.innerWidth / REF_W, (window.innerHeight - UI_CHROME) / CARD_H, 1);
   }
   function getMaxScale() {
-    return Math.min(window.innerWidth / CARD_W, window.innerHeight / CARD_H, 1);
+    const UI_CHROME = 180;
+    return Math.min(window.innerWidth / CARD_W, (window.innerHeight - UI_CHROME) / CARD_H, 1);
   }
   function getScale(sy) {
     const std = getStdScale();
