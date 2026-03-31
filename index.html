@@ -6,24 +6,19 @@
   <title>Benjamin Tian</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #EDEDED;
+      --bg: #E9EAEC;
       --card: #FFFFFF;
-      --text: #111111;
-      --muted: #8A8A82;
-      --border: #D0CEC7;
-      --mm: #8F8F8F;
-      --amber: #C8A048
-      --sage: #5E9075;
-      --dust: #B08070;
-      --navy: #034694;
-      --serif: 'Cormorant Garamond', Georgia, serif;
+      --text: #0D0F12;
+      --muted: #8A8E96;
+      --border: #E0E2E6;
+      --mm: #8A8E96;
+      --accent: #5E4FD9;
       --sans: 'Inter', system-ui, sans-serif;
-      --mono: 'Space Mono', monospace;
     }
 
     html {
@@ -106,7 +101,7 @@
       position: absolute;
       top: -28px;
       left: 2px;
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
       letter-spacing: 0.1em;
       color: var(--muted);
@@ -185,7 +180,7 @@
        CARD 1 — INTRO
     ═══════════════════════════════════════════ */
     #card-intro {
-      background: #EEECEA;
+      background: #EDEEF1;
     }
     .intro-inner {
       position: absolute;
@@ -197,7 +192,7 @@
       padding: 80px 96px;
     }
     .intro-eyebrow {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 11px;
       letter-spacing: 0.12em;
       color: var(--muted);
@@ -205,20 +200,20 @@
       margin-bottom: 24px;
     }
     .intro-name {
-      font-family: var(--serif);
+      font-family: var(--sans);
       font-size: 128px;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 0.88;
       color: var(--text);
-      letter-spacing: -0.02em;
+      letter-spacing: -0.04em;
       margin-bottom: 40px;
     }
     .intro-name em {
-      font-style: italic;
-      color: var(--amber);
+      font-style: normal;
+      color: var(--accent);
     }
     .intro-role {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 11px;
       letter-spacing: 0.07em;
       color: var(--muted);
@@ -231,14 +226,14 @@
       font-size: 15px;
       font-weight: 300;
       line-height: 1.75;
-      color: #4A4A45;
+      color: #4A4A54;
       max-width: 480px;
     }
     .intro-more {
       font-size: 14px;
       font-weight: 300;
       line-height: 1.7;
-      color: #5A5A55;
+      color: #55555E;
       max-width: 460px;
       overflow: hidden;
       max-height: 0;
@@ -251,27 +246,16 @@
       opacity: 1;
       margin-top: 20px;
     }
-    /* Amber circle decoration */
+    /* Circle — size/position set dynamically by JS scroll */
     .intro-circle {
       position: absolute;
-      right: 96px;
       top: 50%;
       transform: translateY(-50%);
-      width: 240px;
-      height: 240px;
       border-radius: 50%;
-      background: var(--amber);
-      opacity: 0.12;
-    }
-    .intro-tagline {
-      position: absolute;
-      bottom: 56px;
-      right: 96px;
-      font-family: var(--serif);
-      font-size: 13px;
-      font-style: italic;
-      color: var(--muted);
-      letter-spacing: 0.02em;
+      background: var(--accent);
+      opacity: 0.18;
+      pointer-events: none;
+      will-change: width, height, right;
     }
 
     /* ═══════════════════════════════════════════
@@ -288,7 +272,7 @@
       flex-direction: column;
     }
     .card-title {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 11px;
       letter-spacing: 0.12em;
       color: var(--muted);
@@ -316,14 +300,14 @@
       justify-content: space-between;
     }
     .work-company {
-      font-family: var(--serif);
+      font-family: var(--sans);
       font-size: 36px;
       font-weight: 400;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.03em;
       color: var(--text);
       transition: color 0.2s;
     }
-    .work-item:hover .work-company { color: var(--amber); }
+    .work-item:hover .work-company { color: var(--accent); }
     .work-meta {
       display: flex;
       align-items: center;
@@ -336,7 +320,7 @@
       font-weight: 300;
     }
     .work-year {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 11px;
       color: var(--muted);
     }
@@ -350,7 +334,7 @@
       font-size: 13px;
       font-weight: 300;
       line-height: 1.7;
-      color: #5A5A55;
+      color: #55555E;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.4s ease, opacity 0.4s ease;
@@ -384,7 +368,7 @@
       color: var(--text);
     }
     .work-sub-year {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
       color: var(--muted);
       flex-shrink: 0;
@@ -396,7 +380,7 @@
       margin-top: 10px;
     }
     .work-tag {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 9px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -409,7 +393,7 @@
        CARD 3 — PROJECTS
     ═══════════════════════════════════════════ */
     #card-projects {
-      background: #0F0F0D;
+      background: #FFFFFF;
     }
     .projects-inner {
       position: absolute;
@@ -419,10 +403,10 @@
       flex-direction: column;
     }
     .card-title-light {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 11px;
       letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.35);
+      color: var(--muted);
       text-transform: uppercase;
       margin-bottom: 56px;
     }
@@ -431,112 +415,116 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
-      gap: 1px;
-      background: rgba(255,255,255,0.08);
+      gap: 20px;
     }
     .proj-cell {
-      background: #0F0F0D;
-      padding: 44px 48px 40px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 36px 40px 32px;
       display: flex;
       flex-direction: column;
       cursor: pointer;
-      transition: background 0.25s ease;
+      transition: background 0.25s ease, border-color 0.25s ease;
       position: relative;
       overflow: hidden;
     }
-    .proj-cell:hover { background: #181816; }
+    .proj-cell:hover {
+      background: #F9F9FB;
+      border-color: #C5C8D0;
+    }
     .proj-cover {
       flex-shrink: 0;
-      height: 160px;
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 32px;
-      opacity: 0.85;
+      margin-bottom: 28px;
+      opacity: 0.8;
       transition: opacity 0.25s ease;
     }
     .proj-cell:hover .proj-cover { opacity: 1; }
     .proj-cover svg { width: 100%; height: 100%; }
     .proj-cell-arrow {
       position: absolute;
-      top: 36px;
-      right: 44px;
+      top: 32px;
+      right: 36px;
       font-size: 16px;
-      color: rgba(255,255,255,0.2);
+      color: var(--border);
       transition: color 0.2s, transform 0.2s;
     }
     .proj-cell:hover .proj-cell-arrow {
-      color: rgba(255,255,255,0.55);
+      color: var(--muted);
       transform: translate(2px, -2px);
     }
     .proj-body { flex: 1; display: flex; flex-direction: column; }
     .proj-num {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
-      color: rgba(255,255,255,0.2);
+      color: var(--muted);
       letter-spacing: 0.08em;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+      opacity: 0.5;
     }
     .proj-name {
-      font-family: var(--serif);
-      font-size: 32px;
+      font-family: var(--sans);
+      font-size: 28px;
       font-weight: 400;
-      color: #FFFFFF;
-      letter-spacing: -0.01em;
+      color: var(--text);
+      letter-spacing: -0.03em;
       line-height: 1.1;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .proj-desc {
       font-size: 12px;
       font-weight: 300;
-      color: rgba(255,255,255,0.4);
+      color: #55555E;
       line-height: 1.6;
     }
     .proj-status {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 9px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-top: 20px;
+      color: var(--muted);
+      margin-top: 16px;
     }
     .proj-dot {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--sage);
+      background: var(--accent);
     }
     .proj-stack {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
     .proj-stack-tag {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 9px;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.28);
-      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      border: 1px solid var(--border);
       padding: 3px 8px;
     }
     .proj-biz {
       font-size: 11px;
       font-weight: 300;
-      color: rgba(255,255,255,0.28);
+      color: var(--muted);
       line-height: 1.6;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     /* ═══════════════════════════════════════════
        CARD 4 — UNIVERSE
     ═══════════════════════════════════════════ */
     #card-universe {
-      background: #EEECEA;
+      background: #EDEEF1;
     }
     .universe-inner {
       position: absolute;
@@ -562,7 +550,7 @@
     }
     .univ-cell:hover {
       background: rgba(255,255,255,0.9);
-      border-color: #B8B4AD;
+      border-color: #C5C8D0;
     }
     .univ-icon {
       font-size: 22px;
@@ -570,7 +558,7 @@
       opacity: 0.7;
     }
     .univ-category {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 9px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -578,7 +566,7 @@
       margin-bottom: 8px;
     }
     .univ-title {
-      font-family: var(--serif);
+      font-family: var(--sans);
       font-size: 24px;
       font-weight: 400;
       color: var(--text);
@@ -588,7 +576,7 @@
     .univ-items {
       font-size: 12px;
       font-weight: 300;
-      color: #6A6A65;
+      color: #68697A;
       line-height: 1.7;
     }
 
@@ -696,7 +684,7 @@
     .modal-info {
       width: 340px;
       flex-shrink: 0;
-      background: #F8F6F2;
+      background: #F3F4F6;
       padding: 48px 40px;
       display: flex;
       flex-direction: column;
@@ -716,7 +704,7 @@
     }
     .modal-close:hover { color: var(--text); }
     .modal-project-label {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -724,7 +712,7 @@
       margin-bottom: 20px;
     }
     .modal-project-name {
-      font-family: var(--serif);
+      font-family: var(--sans);
       font-size: 48px;
       font-weight: 400;
       color: var(--text);
@@ -736,7 +724,7 @@
       font-size: 13px;
       font-weight: 300;
       line-height: 1.7;
-      color: #5A5A55;
+      color: #55555E;
       flex: 1;
     }
     .modal-meta {
@@ -752,7 +740,7 @@
       font-size: 11px;
     }
     .modal-meta-key {
-      font-family: var(--mono);
+      font-family: var(--sans);
       color: var(--muted);
       letter-spacing: 0.05em;
     }
@@ -770,7 +758,7 @@
     .chat-header {
       padding: 20px 28px;
       border-bottom: 1px solid var(--border);
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -811,7 +799,7 @@
     }
     .chat-input {
       flex: 1;
-      background: #F8F6F2;
+      background: #F3F4F6;
       border: 1px solid var(--border);
       padding: 10px 14px;
       font-family: var(--sans);
@@ -823,13 +811,13 @@
       border-radius: 1px;
       line-height: 1.5;
     }
-    .chat-input:focus { border-color: #AAAAAA; }
+    .chat-input:focus { border-color: #A0A2AB; }
     .chat-send {
       background: var(--text);
       color: #FFF;
       border: none;
       padding: 10px 18px;
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 10px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -837,7 +825,7 @@
       transition: background 0.2s;
       border-radius: 1px;
     }
-    .chat-send:hover { background: #333; }
+    .chat-send:hover { background: #1A1C22; }
 
     /* scroll hint arrow at bottom of card */
     .scroll-hint {
@@ -853,7 +841,7 @@
       pointer-events: none;
     }
     .scroll-hint span {
-      font-family: var(--mono);
+      font-family: var(--sans);
       font-size: 9px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -896,14 +884,13 @@
   <div class="cw" id="cw-0">
     <div class="clabel">00 — 你好</div>
     <div class="card" id="card-intro">
-      <div class="intro-circle"></div>
+      <div class="intro-circle" id="intro-circle"></div>
       <div class="intro-inner">
         <div class="intro-eyebrow">个人主页 · 2025</div>
         <div class="intro-name">Benjamin<br><em>Tian</em></div>
         <div class="intro-role">互联网战略 &nbsp;·&nbsp; INTJ &nbsp;·&nbsp; 有taste的理想主义</div>
         <p class="intro-bio">在小红书做了四年策略，经历了社区从内容生态到大商业的完整演变，也参与了国际化从 0 到 1 的搭建。现在把对商业的理解和对 AI 的兴趣拼在一起，做一些觉得有意思的事情。</p>
       </div>
-      <div class="intro-tagline">田嘉平</div>
     </div>
   </div>
 
@@ -1008,20 +995,20 @@
             <div class="proj-cover">
               <svg viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Concentric rings — compass / destination -->
-                <circle cx="130" cy="80" r="72" stroke="rgba(200,160,72,0.10)" stroke-width="1"/>
-                <circle cx="130" cy="80" r="52" stroke="rgba(200,160,72,0.16)" stroke-width="1"/>
-                <circle cx="130" cy="80" r="34" stroke="rgba(200,160,72,0.24)" stroke-width="1"/>
-                <circle cx="130" cy="80" r="16" stroke="rgba(200,160,72,0.36)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="72" stroke="rgba(94,79,217,0.08)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="52" stroke="rgba(94,79,217,0.13)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="34" stroke="rgba(94,79,217,0.20)" stroke-width="1"/>
+                <circle cx="130" cy="80" r="16" stroke="rgba(94,79,217,0.30)" stroke-width="1"/>
                 <!-- Cross hairs -->
-                <line x1="130" y1="8" x2="130" y2="152" stroke="rgba(200,160,72,0.08)" stroke-width="1"/>
-                <line x1="58" y1="80" x2="202" y2="80" stroke="rgba(200,160,72,0.08)" stroke-width="1"/>
+                <line x1="130" y1="8" x2="130" y2="152" stroke="rgba(13,15,18,0.06)" stroke-width="1"/>
+                <line x1="58" y1="80" x2="202" y2="80" stroke="rgba(13,15,18,0.06)" stroke-width="1"/>
                 <!-- Route arc -->
-                <path d="M 70 100 Q 110 30 190 55" stroke="rgba(200,160,72,0.45)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                <path d="M 70 100 Q 110 30 190 55" stroke="rgba(94,79,217,0.55)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
                 <!-- Destination pin -->
-                <circle cx="190" cy="55" r="4" fill="rgba(200,160,72,0.7)"/>
-                <circle cx="70" cy="100" r="3" fill="rgba(200,160,72,0.4)"/>
+                <circle cx="190" cy="55" r="4" fill="rgba(94,79,217,0.8)"/>
+                <circle cx="70" cy="100" r="3" fill="rgba(94,79,217,0.45)"/>
                 <!-- Pin dot glow -->
-                <circle cx="190" cy="55" r="8" fill="rgba(200,160,72,0.12)"/>
+                <circle cx="190" cy="55" r="8" fill="rgba(94,79,217,0.10)"/>
               </svg>
             </div>
             <div class="proj-body">
@@ -1035,7 +1022,7 @@
                 <span class="proj-stack-tag">Maps API</span>
               </div>
             </div>
-            <div class="proj-status" style="margin-top:20px;"><span class="proj-dot"></span> Live Beta</div>
+            <div class="proj-status" style="margin-top:16px;"><span class="proj-dot"></span> Live Beta</div>
             <div class="proj-cell-arrow">↗</div>
           </div>
 
@@ -1044,33 +1031,33 @@
             <div class="proj-cover">
               <svg viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Grid lines -->
-                <line x1="30" y1="130" x2="240" y2="130" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-                <line x1="30" y1="100" x2="240" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
-                <line x1="30" y1="72" x2="240" y2="72" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
-                <line x1="30" y1="44" x2="240" y2="44" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
-                <line x1="30" y1="16" x2="30" y2="130" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-                <!-- Candlesticks (simplified as vertical rects) -->
-                <rect x="48" y="95" width="6" height="25" fill="rgba(94,144,117,0.35)"/>
-                <line x1="51" y1="88" x2="51" y2="124" stroke="rgba(94,144,117,0.4)" stroke-width="1"/>
-                <rect x="72" y="88" width="6" height="20" fill="rgba(94,144,117,0.4)"/>
-                <line x1="75" y1="82" x2="75" y2="112" stroke="rgba(94,144,117,0.4)" stroke-width="1"/>
-                <rect x="96" y="98" width="6" height="18" fill="rgba(185,90,80,0.35)"/>
-                <line x1="99" y1="93" x2="99" y2="120" stroke="rgba(185,90,80,0.4)" stroke-width="1"/>
-                <rect x="120" y="72" width="6" height="22" fill="rgba(94,144,117,0.45)"/>
-                <line x1="123" y1="65" x2="123" y2="98" stroke="rgba(94,144,117,0.45)" stroke-width="1"/>
-                <rect x="144" y="62" width="6" height="20" fill="rgba(94,144,117,0.5)"/>
-                <line x1="147" y1="55" x2="147" y2="86" stroke="rgba(94,144,117,0.5)" stroke-width="1"/>
-                <rect x="168" y="80" width="6" height="16" fill="rgba(185,90,80,0.35)"/>
-                <line x1="171" y1="75" x2="171" y2="100" stroke="rgba(185,90,80,0.4)" stroke-width="1"/>
-                <rect x="192" y="44" width="6" height="28" fill="rgba(94,144,117,0.6)"/>
-                <line x1="195" y1="36" x2="195" y2="76" stroke="rgba(94,144,117,0.6)" stroke-width="1"/>
+                <line x1="30" y1="130" x2="240" y2="130" stroke="rgba(13,15,18,0.08)" stroke-width="1"/>
+                <line x1="30" y1="100" x2="240" y2="100" stroke="rgba(13,15,18,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="72" x2="240" y2="72" stroke="rgba(13,15,18,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="44" x2="240" y2="44" stroke="rgba(13,15,18,0.05)" stroke-width="1" stroke-dasharray="4,5"/>
+                <line x1="30" y1="16" x2="30" y2="130" stroke="rgba(13,15,18,0.08)" stroke-width="1"/>
+                <!-- Candlesticks -->
+                <rect x="48" y="95" width="6" height="25" fill="rgba(52,168,83,0.40)"/>
+                <line x1="51" y1="88" x2="51" y2="124" stroke="rgba(52,168,83,0.45)" stroke-width="1"/>
+                <rect x="72" y="88" width="6" height="20" fill="rgba(52,168,83,0.45)"/>
+                <line x1="75" y1="82" x2="75" y2="112" stroke="rgba(52,168,83,0.45)" stroke-width="1"/>
+                <rect x="96" y="98" width="6" height="18" fill="rgba(220,53,69,0.40)"/>
+                <line x1="99" y1="93" x2="99" y2="120" stroke="rgba(220,53,69,0.45)" stroke-width="1"/>
+                <rect x="120" y="72" width="6" height="22" fill="rgba(52,168,83,0.50)"/>
+                <line x1="123" y1="65" x2="123" y2="98" stroke="rgba(52,168,83,0.50)" stroke-width="1"/>
+                <rect x="144" y="62" width="6" height="20" fill="rgba(52,168,83,0.55)"/>
+                <line x1="147" y1="55" x2="147" y2="86" stroke="rgba(52,168,83,0.55)" stroke-width="1"/>
+                <rect x="168" y="80" width="6" height="16" fill="rgba(220,53,69,0.40)"/>
+                <line x1="171" y1="75" x2="171" y2="100" stroke="rgba(220,53,69,0.45)" stroke-width="1"/>
+                <rect x="192" y="44" width="6" height="28" fill="rgba(94,79,217,0.65)"/>
+                <line x1="195" y1="36" x2="195" y2="76" stroke="rgba(94,79,217,0.65)" stroke-width="1"/>
                 <!-- Trend line -->
-                <polyline points="51,108 75,100 99,108 123,84 147,74 171,90 195,58" stroke="rgba(94,144,117,0.55)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="51,108 75,100 99,108 123,84 147,74 171,90 195,58" stroke="rgba(94,79,217,0.55)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 <!-- Signal -->
-                <circle cx="195" cy="58" r="5" fill="rgba(94,144,117,0.8)"/>
-                <circle cx="195" cy="58" r="10" fill="rgba(94,144,117,0.12)"/>
+                <circle cx="195" cy="58" r="5" fill="rgba(94,79,217,0.9)"/>
+                <circle cx="195" cy="58" r="10" fill="rgba(94,79,217,0.10)"/>
                 <!-- BUY label -->
-                <text x="204" y="56" fill="rgba(94,144,117,0.7)" font-size="9" font-family="monospace">BUY</text>
+                <text x="204" y="56" fill="rgba(94,79,217,0.75)" font-size="9" font-family="monospace">BUY</text>
               </svg>
             </div>
             <div class="proj-body">
@@ -1084,7 +1071,7 @@
                 <span class="proj-stack-tag">本地服务</span>
               </div>
             </div>
-            <div class="proj-status" style="margin-top:20px;"><span class="proj-dot" style="background:var(--amber)"></span> 内测中</div>
+            <div class="proj-status" style="margin-top:16px;"><span class="proj-dot"></span> 内测中</div>
             <div class="proj-cell-arrow">↗</div>
           </div>
 
@@ -1271,6 +1258,24 @@
     labels.forEach((el, i) => {
       el.style.opacity = i === idx ? '1' : '0';
     });
+
+    /* ── Intro circle: large at rest → small as user scrolls away ── */
+    const circle = document.getElementById('intro-circle');
+    if (circle) {
+      // Raw progress leaving card 1 (0 = at card 1, 1 = at card 2)
+      const step = (CARD_W + CARD_GAP) * std;
+      const p0 = Math.min(sy / step, 1);
+      // ease-out so it moves fast early and settles gently
+      const ep = 1 - Math.pow(1 - p0, 2.5);
+      // Size: 720px (fills card height) → 260px
+      const cSize = 720 - (720 - 260) * ep;
+      // Right offset: starts at -260px (mostly off screen, bleeds in from right)
+      // ends at 80px (sits inside the card)
+      const cRight = -260 + (-260 - 80) * -ep;  // -260 → 80
+      circle.style.width  = cSize  + 'px';
+      circle.style.height = cSize  + 'px';
+      circle.style.right  = cRight + 'px';
+    }
   }
 
   /* ═══════════════════════════════════════════
