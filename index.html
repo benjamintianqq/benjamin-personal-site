@@ -270,6 +270,7 @@
       padding: 72px 96px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
     .card-title {
       font-family: var(--sans);
@@ -286,13 +287,12 @@
       gap: 0;
     }
     .work-item {
-      border-top: 1px solid var(--border);
       padding: 24px 0;
       cursor: pointer;
       overflow: hidden;
     }
-    .work-item:last-child {
-      border-bottom: 1px solid var(--border);
+    .work-item + .work-item {
+      border-top: 1px solid var(--border);
     }
     .work-header {
       display: flex;
